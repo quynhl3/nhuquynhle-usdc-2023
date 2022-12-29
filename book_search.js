@@ -1,46 +1,33 @@
 /**
- * RECOMMENDATION
- *
- * To test your code, you should open "tester.html" in a web browser.
- * You can then use the "Developer Tools" to see the JavaScript console.
- * There, you will see the results unit test execution. You are welcome
- * to run the code any way you like, but this is similar to how we will
- * run your code submission.
- *
- * The Developer Tools in Chrome are available under the "..." menu,
- * futher hidden under the option "More Tools." In Firefox, they are
- * under the hamburger (three horizontal lines), also hidden under "More Tools."
- */
-
-/**
  * Searches for matches in scanned text.
  * @param {string} searchTerm - The word or term we're searching for.
  * @param {JSON} scannedTextObj - A JSON object representing the scanned text.
  * @returns {JSON} - Search results.
  * */
 function findSearchTermInBooks(searchTerm, scannedTextObj) {
-  /** You will need to implement your search and
-   * return the appropriate object here. */
+  if (searchTerm.length === 0 || typeof searchTerm !== 'string') {
+    return { SearchTerm: searchTerm, Results: [] };
+  }
 
-  var result = {
-    SearchTerm: '',
-    Results: [],
-  };
-
-  //update the result obj to have the searchTerm in the key
-  result.SearchTerm = searchTerm;
+  const searchTermMap = new Map();
 
   for (let i = 0; i < scannedTextObj.length; i++) {
     const isbn = scannedTextObj[i].ISBN;
-
     const content = scannedTextObj[i].Content;
 
     //skip iteration because content empty
     if (content.length === 0) continue;
 
     for (let j = 0; j < content.length; j++) {
-      if (content[j].Text.includes(searchTerm)) {
-        result.Results.push({
+      const text = content[j].Text;
+
+      if (text.includes(searchTerm)) {
+        //initialize search term in the map
+        if (!searchTermMap.has(searchTerm)) {
+          searchTermMap.set(searchTerm, []);
+        }
+        //else add info into searchTerm's arr in map
+        searchTermMap.get(searchTerm).push({
           ISBN: isbn,
           Page: content[j].Page,
           Line: content[j].Line,
@@ -48,6 +35,12 @@ function findSearchTermInBooks(searchTerm, scannedTextObj) {
       }
     }
   }
+
+  let result = {
+    SearchTerm: searchTerm,
+    Results: searchTermMap.get(searchTerm) || [],
+  };
+
   return result;
 }
 
@@ -71,6 +64,11 @@ const twentyLeaguesIn = [
         Page: 31,
         Line: 10,
         Text: 'eyes were, I asked myself how he had managed to see, and',
+      },
+      {
+        Page: 31,
+        Line: 2,
+        Text: '34 checking in here.',
       },
     ],
   },
@@ -103,6 +101,22 @@ const booksWithSomeContent = [
         Page: 49,
         Line: 5,
         Text: "I'd just be the catcher in the rye and all",
+      },
+      {
+        Page: 30,
+        Line: 10,
+        Text: 'checking for The casing in this text',
+      },
+    ],
+  },
+  {
+    Title: 'Romeo and Juliet',
+    ISBN: '94837400004394',
+    Content: [
+      {
+        Page: 39,
+        Line: 7,
+        Text: 'Checking for the lowercase form',
       },
     ],
   },
@@ -178,10 +192,47 @@ if (test4result.Results.length == 0) {
 
 /** In the case where there are books but some books have scanned texts*/
 const test5result = findSearchTermInBooks('the', booksWithSomeContent);
-if (test5result.Results.length == 1) {
+if (test5result.Results.length == 2) {
   console.log('PASS: Test 5');
 } else {
   console.log('FAIL: Test 5');
-  console.log('Expected:', 1);
+  console.log('Expected:', 2);
   console.log('Received:', test5result.Results.length);
+}
+/** searchTerm is an empty string*/
+const test6result = findSearchTermInBooks('', twentyLeaguesIn);
+if (test6result.Results.length == 0) {
+  console.log('PASS: Test 6');
+} else {
+  console.log('FAIL: Test 6');
+  console.log('Expected:', 0);
+  console.log('Received:', test6result.Results.length);
+}
+/** searchTerm is not a string*/
+const test7result = findSearchTermInBooks(34, twentyLeaguesIn);
+if (test7result.Results.length === 0) {
+  console.log('PASS: Test 7');
+} else {
+  console.log('FAIL: Test 7');
+  console.log('Expected:', 0);
+  console.log('Received:', test7result.Results.length);
+}
+/** searchTerm case-sensitive*/
+const test8result = findSearchTermInBooks('The', booksWithSomeContent);
+if (test8result.Results.length == 1) {
+  console.log('PASS: Test 8');
+} else {
+  console.log('FAIL: Test 8');
+  console.log('Expected:', 1);
+  console.log('Received:', test8result.Results.length);
+}
+
+/** searchTerm more than 1 result*/
+const test9result = findSearchTermInBooks('for', booksWithSomeContent);
+if (test9result.Results.length == 2) {
+  console.log('PASS: Test 9');
+} else {
+  console.log('FAIL: Test 9');
+  console.log('Expected:', 2);
+  console.log('Received:', test9result.Results.length);
 }
