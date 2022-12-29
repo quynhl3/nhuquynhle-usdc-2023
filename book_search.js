@@ -32,9 +32,8 @@ function findSearchTermInBooks(searchTerm, scannedTextObj) {
 
   for (let i = 0; i < scannedTextObj.length; i++) {
     const isbn = scannedTextObj[i].ISBN;
-    if (scannedTextObj[i].Content.length === 0) continue;
 
-    let content = scannedTextObj[i].Content;
+    const content = scannedTextObj[i].Content;
 
     //skip iteration because content empty
     if (content.length === 0) continue;
@@ -72,6 +71,38 @@ const twentyLeaguesIn = [
         Page: 31,
         Line: 10,
         Text: 'eyes were, I asked myself how he had managed to see, and',
+      },
+    ],
+  },
+];
+
+const booksButNoContent = [
+  {
+    Title: 'The Catcher in the Rye',
+    ISBN: '9780316769488',
+    Content: [],
+  },
+  {
+    Title: 'Of Mice and Men',
+    ISBN: '9780140177398',
+    Content: [],
+  },
+];
+
+const booksWithSomeContent = [
+  {
+    Title: 'Of Mice and Men',
+    ISBN: '9780140177398',
+    Content: [],
+  },
+  {
+    Title: 'The Catcher in the Rye',
+    ISBN: '9780316769488',
+    Content: [
+      {
+        Page: 49,
+        Line: 5,
+        Text: "I'd just be the catcher in the rye and all",
       },
     ],
   },
@@ -123,4 +154,34 @@ if (test2result.Results.length == 1) {
   console.log('FAIL: Test 2');
   console.log('Expected:', twentyLeaguesOut.Results.length);
   console.log('Received:', test2result.Results.length);
+}
+
+/** In the case where no books are in object */
+const test3result = findSearchTermInBooks('the', []);
+if (test3result.Results.length == 0) {
+  console.log('PASS: Test 3');
+} else {
+  console.log('FAIL: Test 3');
+  console.log('Expected:', 0);
+  console.log('Received:', test3result.Results.length);
+}
+
+/** In the case where there are books but no scanned texts*/
+const test4result = findSearchTermInBooks('the', booksButNoContent);
+if (test4result.Results.length == 0) {
+  console.log('PASS: Test 4');
+} else {
+  console.log('FAIL: Test 4');
+  console.log('Expected:', 0);
+  console.log('Received:', test4result.Results.length);
+}
+
+/** In the case where there are books but some books have scanned texts*/
+const test5result = findSearchTermInBooks('the', booksWithSomeContent);
+if (test5result.Results.length == 1) {
+  console.log('PASS: Test 5');
+} else {
+  console.log('FAIL: Test 5');
+  console.log('Expected:', 1);
+  console.log('Received:', test5result.Results.length);
 }
