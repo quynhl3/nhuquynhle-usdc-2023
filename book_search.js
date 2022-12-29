@@ -9,7 +9,10 @@ function findSearchTermInBooks(searchTerm, scannedTextObj) {
     return { SearchTerm: searchTerm, Results: [] };
   }
 
-  const searchTermMap = new Map();
+  var result = {
+    SearchTerm: searchTerm,
+    Results: [],
+  };
 
   for (let i = 0; i < scannedTextObj.length; i++) {
     const isbn = scannedTextObj[i].ISBN;
@@ -21,13 +24,9 @@ function findSearchTermInBooks(searchTerm, scannedTextObj) {
     for (let j = 0; j < content.length; j++) {
       const text = content[j].Text;
 
+      //add info into results
       if (text.includes(searchTerm)) {
-        //initialize search term in the map
-        if (!searchTermMap.has(searchTerm)) {
-          searchTermMap.set(searchTerm, []);
-        }
-        //else add info into searchTerm's arr in map
-        searchTermMap.get(searchTerm).push({
+        result.Results.push({
           ISBN: isbn,
           Page: content[j].Page,
           Line: content[j].Line,
@@ -35,11 +34,6 @@ function findSearchTermInBooks(searchTerm, scannedTextObj) {
       }
     }
   }
-
-  let result = {
-    SearchTerm: searchTerm,
-    Results: searchTermMap.get(searchTerm) || [],
-  };
 
   return result;
 }
