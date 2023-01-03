@@ -17,23 +17,3 @@ https://firefox-source-docs.mozilla.org/devtools-user/browser_console/index.html
 And here are the instructions for Google Chrome:
 
 https://developer.chrome.com/docs/devtools/open/
-
-Either should work; we tested under both on Mac and Linux.
-
-You will submit both the HTML and JavaScript files when you are done. You should not need to edit `tester.html`. We expect all of your work to appear in the file `book_search.js`. 
-
-## Submission
-
-Directions for submission are in the prompt. As a reminder, you should commit your code to a repository called
-
-*firstnamelastname*-usdc-2023
-
-If you were remarkable technologists of years past, you might name your repository
-
-`otisboykin-usdc-2023`
-
-or 
-
-`mariebrown-usdc-2023`
-
-You, of course, should name your repository for the remarkable technologist of civic tech's future that you are.
